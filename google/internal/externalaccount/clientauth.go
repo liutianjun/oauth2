@@ -6,7 +6,7 @@ package externalaccount
 
 import (
 	"encoding/base64"
-	"golang.org/x/oauth2"
+	"github.com/liutianjun/oauth2"
 	"net/http"
 	"net/url"
 )

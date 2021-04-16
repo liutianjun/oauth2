@@ -5,7 +5,7 @@
 package externalaccount
 
 import (
-	"golang.org/x/oauth2"
+	"github.com/liutianjun/oauth2"
 	"net/http"
 	"net/url"
 	"reflect"
