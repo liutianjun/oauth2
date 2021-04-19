@@ -151,6 +151,35 @@ func (c *Config) AuthCodeURL(state string, opts ...AuthCodeOption) string {
 	var buf bytes.Buffer
 	buf.WriteString(c.Endpoint.AuthURL)
 	v := url.Values{
+		"response_type": {"code"},
+		"client_id":     {c.ClientID},
+	}
+	if c.RedirectURL != "" {
+		v.Set("redirect_uri", c.RedirectURL)
+	}
+	if len(c.Scopes) > 0 {
+		v.Set("scope", strings.Join(c.Scopes, " "))
+	}
+	if state != "" {
+		// TODO(light): Docs say never to omit state; don't allow empty.
+		v.Set("state", state)
+	}
+	for _, opt := range opts {
+		opt.setValue(v)
+	}
+	if strings.Contains(c.Endpoint.AuthURL, "?") {
+		buf.WriteByte('&')
+	} else {
+		buf.WriteByte('?')
+	}
+	buf.WriteString(v.Encode())
+	return buf.String()
+}
+
+func (c *Config) AuthCodeOidcURL(state string, opts ...AuthCodeOption) string {
+	var buf bytes.Buffer
+	buf.WriteString(c.Endpoint.AuthURL)
+	v := url.Values{
 		"response_type": {"code id_token"},
 		"client_id":     {c.ClientID},
 	}
